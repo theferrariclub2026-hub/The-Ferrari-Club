@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Ferrari Club | Men's Wear</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #d90429;
+      --primary-hover: #ef233c;
+      --bg: #0f1115;
+      --card-bg: #181b22;
+      --text: #edf2f4;
+      --muted: #8d99ae;
+      --border: #2b303c;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding-bottom: 70px;
+    }
+
+    header {
+      background: rgba(15, 17, 21, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .brand-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      text-transform: uppercase;
+    }
+
+    .brand-title span {
+      color: var(--primary);
+    }
+
+    .cart-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cart-badge {
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      padding: 2px 7px;
+      font-size: 0.75rem;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 50px 20px;
+      background: radial-gradient(circle at top, rgba(217, 4, 41, 0.15) 0%, transparent 70%);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .hero h1 {
+      font-size: 2.3rem;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 1.05rem;
+      max-width: 500px;
+      margin: 0 auto 20px;
+      letter-spacing: 0.5px;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .product-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .product-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #232733;
+    }
+
+    .product-info {
+      padding: 16px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .product-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .product-price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 1.15rem;
+      margin-bottom: 14px;
+    }
+
+    .btn-add {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      transition: background 0.2s;
+    }
+
+    .btn-add:hover {
+      background: var(--primary-hover);
+    }
+
+    /* Cart Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      width: 100%;
+      max-width: 480px;
+      border-radius: 16px;
+      padding: 24px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .cart-items {
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 10px;
+    }
+
+    .cart-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .cart-total {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+    }
+
+    .btn-submit {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .btn-submit:hover {
+      background: #20ba5a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand-title">The <span>Ferrari</span> Club</div>
+    <button class="cart-btn" onclick="openCart()">
+      Bag <span class="cart-badge" id="cart-count">0</span>
+    </button>
+  </header>
+
+  <section class="hero">
+    <h1>The Ferrari Club</h1>
+    <p>Premium Men's Wear & Exclusive Chinese Collection</p>
+  </section>
+
+  <main class="container">
+    <h2 class="section-title">Latest Collection</h2>
+    <div class="product-grid" id="product-list">
+      <!-- Products render via JS -->
+    </div>
+  </main>
+
+  <!-- Cart Modal -->
+  <div class="modal-overlay" id="cart-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Shopping Bag</h3>
+        <button class="close-btn" onclick="closeCart()">&times;</button>
+      </div>
+
+      <div class="cart-items" id="cart-items">
+        <p style="color: var(--muted); text-align: center;">Tomar bag faka ache.</p>
+      </div>
+
+      <div class="cart-total">
+        <span>Total:</span>
+        <span id="cart-total-price">৳ 0</span>
+      </div>
+
+      <form onsubmit="handleCheckout(event)">
+        <div class="form-group">
+          <label>Customer Name</label>
+          <input type="text" id="cust-name" required placeholder="Apnar naam likhun">
+        </div>
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="cust-phone" required placeholder="01XXXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label>Delivery Address</label>
+          <textarea id="cust-address" rows="2" required placeholder="Thikana likhun (Zilla, Thana, Area)"></textarea>
+        </div>
+        <button type="submit" class="btn-submit">WhatsApp-e Order Confirm Korun</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Product list (ImgBB theke chhobi upload kore 'image' link gulo update korte paro)
+    const products = [
+      { id: 1, name: "Premium Chinese Polo Shirt", price: 850, image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500" },
+      { id: 2, name: "Casual Slim Fit T-Shirt", price: 550, image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500" },
+      { id: 3, name: "Formal & Semi-Formal Shirt", price: 1100, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=500" },
+      { id: 4, name: "Imported Chino / Casual Pant", price: 1350, image: "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=500" },
+      { id: 5, name: "Comfort Stretch Trouser", price: 950, image: "https://images.unsplash.com/photo-1506630448388-4e683c67ddb0?w=500" }
+    ];
+
+    let cart = [];
+
+    function renderProducts() {
+      const container = document.getElementById('product-list');
+      container.innerHTML = products.map(item => `
+        <div class="product-card">
+          <img src="${item.image}" alt="${item.name}" class="product-img">
+          <div class="product-info">
+            <div>
+              <div class="product-name">${item.name}</div>
+              <div class="product-price">৳ ${item.price}</div>
+            </div>
+            <button class="btn-add" onclick="addToCart(${item.id})">Add to Bag</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function addToCart(id) {
+      const item = products.find(p => p.id === id);
+      cart.push(item);
+      updateCart();
+      openCart();
+    }
+
+    function updateCart() {
+      document.getElementById('cart-count').innerText = cart.length;
+      const cartItems = document.getElementById('cart-items');
+      
+      if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="color: var(--muted); text-align: center;">Tomar bag faka ache.</p>';
+        document.getElementById('cart-total-price').innerText = '৳ 0';
+        return;
+      }
+
+      let total = 0;
+      cartItems.innerHTML = cart.map((item, index) => {
+        total += item.price;
+        return `
+          <div class="cart-row">
+            <span>${item.name}</span>
+            <span>৳ ${item.price} <button onclick="removeFromCart(${index})" style="background:none;border:none;color:var(--primary);cursor:pointer;margin-left:8px;">✕</button></span>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('cart-total-price').innerText = `৳ ${total}`;
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCart();
+    }
+
+    function openCart() {
+      document.getElementById('cart-modal').style.display = 'flex';
+    }
+
+    function closeCart() {
+      document.getElementById('cart-modal').style.display = 'none';
+    }
+
+    function handleCheckout(e) {
+      e.preventDefault();
+      if (cart.length === 0) {
+        alert("Bag-e kono product nei!");
+        return;
+      }
+
+      const name = document.getElementById('cust-name').value;
+      const phone = document.getElementById('cust-phone').value;
+      const address = document.getElementById('cust-address').value;
+
+      let itemsText = cart.map(i => `- ${i.name} (৳${i.price})`).join('%0A');
+      let total = cart.reduce((sum, i) => sum + i.price, 0);
+
+      // WhatsApp format
+      let waMessage = `*New Order - The Ferrari Club*%0A%0A` +
+        `*Customer Name:* ${name}%0A` +
+        `*Phone:* ${phone}%0A` +
+        `*Address:* ${address}%0A%0A` +
+        `*Items Ordered:*%0A${itemsText}%0A%0A` +
+        `*Total Price:* ৳${total}`;
+
+      // Mama's WhatsApp number
+      const shopWhatsApp = "8801608680796";
+      window.open(`https://wa.me/${shopWhatsApp}?text=${waMessage}`, '_blank');
+    }
+
+    renderProducts();
+  </script>
+</body>
+</html>
